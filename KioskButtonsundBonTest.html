@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ali Baba Kiosk</title>
+
+<style>
+
+:root{
+--dark:#08243d;
+--turquoise:#26dfff;
+--blue:#1898ff;
+--yellow:#ffd500;
+--orange:#ff9800;
+--green:#00c853;
+--red:#ff5252;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Impact, Arial Black, sans-serif;
+}
+
+body{
+min-height:100vh;
+background:linear-gradient(180deg,#5b2e91,#3b68b9,#23b9df,#17d8ef);
+padding:20px;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(0,0,0,.12) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,0,0,.12) 1px, transparent 1px);
+background-size:50px 50px;
+pointer-events:none;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo h1{
+font-size:4rem;
+color:#47dfff;
+text-shadow:
+-4px -4px 0 var(--dark),
+4px -4px 0 var(--dark),
+-4px 4px 0 var(--dark),
+4px 4px 0 var(--dark);
+}
+
+.logo p{
+font-size:2rem;
+color:var(--yellow);
+text-shadow:
+-3px -3px 0 var(--dark),
+3px -3px 0 var(--dark),
+-3px 3px 0 var(--dark),
+3px 3px 0 var(--dark);
+}
+
+.produkte{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.produkt{
+background:linear-gradient(to bottom,var(--turquoise),var(--blue));
+border:6px solid var(--dark);
+border-radius:25px;
+padding:25px;
+text-align:center;
+box-shadow:0 8px 0 var(--dark);
+}
+
+.produktname{
+font-size:2rem;
+color:white;
+text-shadow:
+-2px -2px 0 var(--dark),
+2px -2px 0 var(--dark),
+-2px 2px 0 var(--dark),
+2px 2px 0 var(--dark);
+}
+
+.preis{
+font-size:2.4rem;
+margin-top:10px;
+color:var(--yellow);
+text-shadow:
+-2px -2px 0 var(--dark),
+2px -2px 0 var(--dark),
+-2px 2px 0 var(--dark),
+2px 2px 0 var(--dark);
+}
+
+.steuerung{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-top:20px;
+}
+
+.menge{
+width:80px;
+padding:10px;
+background:white;
+border:4px solid var(--dark);
+border-radius:12px;
+font-size:2rem;
+color:var(--dark);
+}
+
+.plus,.minus{
+width:70px;
+height:70px;
+border:none;
+border-radius:20px;
+font-size:2.5rem;
+font-weight:bold;
+color:white;
+cursor:pointer;
+}
+
+.plus{
+background:var(--green);
+box-shadow:0 6px 0 #087e37;
+}
+
+.minus{
+background:var(--red);
+box-shadow:0 6px 0 #a02d2d;
+}
+
+.kasse{
+background:white;
+border:6px solid var(--dark);
+border-radius:25px;
+margin-top:30px;
+padding:30px;
+text-align:center;
+box-shadow:0 8px 0 var(--dark);
+}
+
+.label{
+font-size:2rem;
+color:var(--dark);
+}
+
+.gesamt{
+font-size:5rem;
+color:var(--orange);
+margin-top:10px;
+text-shadow:
+-2px -2px 0 var(--dark),
+2px -2px 0 var(--dark),
+-2px 2px 0 var(--dark),
+2px 2px 0 var(--dark);
+}
+
+.geldfeld{
+margin-top:20px;
+}
+
+.geldfeld input{
+width:250px;
+height:60px;
+text-align:center;
+font-size:2rem;
+border:4px solid var(--dark);
+border-radius:15px;
+}
+
+.rueckgeld{
+font-size:3rem;
+margin-top:20px;
+color:var(--green);
+text-shadow:2px 2px 0 var(--dark);
+}
+
+.aktionen{
+margin-top:25px;
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:15px 25px;
+font-size:1.3rem;
+border:none;
+border-radius:15px;
+cursor:pointer;
+font-weight:bold;
+background:var(--yellow);
+color:var(--dark);
+box-shadow:0 6px 0 #c1aa00;
+}
+
+.footer{
+text-align:center;
+margin-top:20px;
+color:white;
+}
+
+@media(max-width:900px){
+
+.produkte{
+grid-template-columns:1fr;
+}
+
+.logo h1{
+font-size:3rem;
+}
+
+.gesamt{
+font-size:3rem;
+}
+
+.rueckgeld{
+font-size:2rem;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<h1>ALI BABA KIOSK</h1>
+<p>SNACKS & GETRÄNKE</p>
+</div>
+
+<div class="produkte">
+
+<div class="produkt">
+<div class="produktname">🥤 CAPRI SONNE</div>
+<div class="preis">0,50 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('capri',-1)">−</button>
+<div class="menge" id="capri">0</div>
+<button class="plus" onclick="change('capri',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">💧 WASSER 0,25 L</div>
+<div class="preis">0,25 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('still',-1)">−</button>
+<div class="menge" id="still">0</div>
+<button class="plus" onclick="change('still',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">💦 WASSER 1,5 L</div>
+<div class="preis">0,35 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('gross',-1)">−</button>
+<div class="menge" id="gross">0</div>
+<button class="plus" onclick="change('gross',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">⚡ MONSTER ENERGY</div>
+<div class="preis">1,10 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('monster',-1)">−</button>
+<div class="menge" id="monster">0</div>
+<button class="plus" onclick="change('monster',1)">+</button>
+</div>
+</div>
+<div class="produkt">
+<div class="produktname">🍫 MARS</div>
+<div class="preis">0,50 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('mars',-1)">−</button>
+<div class="menge" id="mars">0</div>
+<button class="plus" onclick="change('mars',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">🍫 SNICKERS</div>
+<div class="preis">0,50 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('snickers',-1)">−</button>
+<div class="menge" id="snickers">0</div>
+<button class="plus" onclick="change('snickers',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">🍫 TWIX</div>
+<div class="preis">0,50 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('twix',-1)">−</button>
+<div class="menge" id="twix">0</div>
+<button class="plus" onclick="change('twix',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">🍫 KINDER BUENO</div>
+<div class="preis">0,40 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('bueno',-1)">−</button>
+<div class="menge" id="bueno">0</div>
+<button class="plus" onclick="change('bueno',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">🍬 KAUGUMMI</div>
+<div class="preis">1,30 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('kaugummi',-1)">−</button>
+<div class="menge" id="kaugummi">0</div>
+<button class="plus" onclick="change('kaugummi',1)">+</button>
+</div>
+</div>
+
+<div class="produkt">
+<div class="produktname">🥔 CHIPS</div>
+<div class="preis">1,20 €</div>
+
+<div class="steuerung">
+<button class="minus" onclick="change('chips',-1)">−</button>
+<div class="menge" id="chips">0</div>
+<button class="plus" onclick="change('chips',1)">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="kasse">
+
+<div class="label">ZU ZAHLEN</div>
+<div id="gesamt" class="gesamt">0,00 €</div>
+
+<div class="geldfeld">
+<div class="label">GEGEBENES GELD (€)</div>
+<br>
+<input type="number" id="gegeben" step="0.01" value="0" oninput="berechnen()">
+</div>
+
+<div id="rueckgeld" class="rueckgeld">
+RÜCKGELD: 0,00 €
+</div>
+
+<div class="aktionen">
+
+<button class="btn" onclick="neuerKunde()">
+🗑 Neuer Kunde
+</button>
+
+<button class="btn" onclick="druckeBon()">
+🧾 Bon drucken
+</button>
+
+</div>
+
+</div>
+
+<div class="footer">
+Ali Baba Kiosk • BvB Pinneberg
+</div>
+
+</div>
+
+<script>
+
+const preise = {
+capri:0.50,
+still:0.25,
+gross:0.35,
+monster:1.10,
+mars:0.50,
+snickers:0.50,
+twix:0.50,
+bueno:0.40,
+kaugummi:1.30,
+chips:1.20
+};
+
+function change(id, wert){
+
+let feld = document.getElementById(id);
+
+let menge = parseInt(feld.innerText);
+
+menge += wert;
+
+if(menge < 0){
+menge = 0;
+}
+
+feld.innerText = menge;
+
+berechnen();
+}
+
+function berechnen(){
+
+let summe = 0;
+
+for(let produkt in preise){
+
+let menge =
+parseInt(
+document.getElementById(produkt).innerText
+);
+
+summe += menge * preise[produkt];
+}
+
+document.getElementById("gesamt").innerText =
+summe.toFixed(2).replace(".",",") + " €";
+
+let gegeben =
+parseFloat(
+document.getElementById("gegeben").value
+) || 0;
+
+let rueckgeld = gegeben - summe;
+
+document.getElementById("rueckgeld").innerText =
+"RÜCKGELD: " +
+rueckgeld.toFixed(2).replace(".",",") +
+" €";
+}
+
+function neuerKunde(){
+
+document.getElementById("capri").innerText = "0";
+document.getElementById("still").innerText = "0";
+document.getElementById("gross").innerText = "0";
+document.getElementById("monster").innerText = "0";
+document.getElementById("mars").innerText = "0";
+document.getElementById("snickers").innerText = "0";
+document.getElementById("twix").innerText = "0";
+document.getElementById("bueno").innerText = "0";
+document.getElementById("kaugummi").innerText = "0";
+document.getElementById("chips").innerText = "0";
+document.getElementById("gegeben").value = "0";
+
+berechnen();
+}
+
+function druckeBon(){
+
+const capri = parseInt(document.getElementById("capri").innerText);
+const still = parseInt(document.getElementById("still").innerText);
+const gross = parseInt(document.getElementById("gross").innerText);
+const monster = parseInt(document.getElementById("monster").innerText);
+const mars =
+parseInt(document.getElementById("mars").innerText);
+
+const snickers =
+parseInt(document.getElementById("snickers").innerText);
+
+const twix =
+parseInt(document.getElementById("twix").innerText);
+
+const bueno =
+parseInt(document.getElementById("bueno").innerText);
+
+const kaugummi =
+parseInt(document.getElementById("kaugummi").innerText);
+
+const chips =
+parseInt(document.getElementById("chips").innerText);
+const summe =
+(capri*0.50)+
+(still*0.25)+
+(gross*0.35)+
+(monster*1.10)+
+(mars*0.50)+
+(snickers*0.50)+
+(twix*0.50)+
+(bueno*0.40)+
+(kaugummi*1.30)+
+(chips*1.20);
+
+const gegeben =
+parseFloat(
+document.getElementById("gegeben").value
+) || 0;
+
+const rueckgeld =
+gegeben - summe;
+
+const jetzt = new Date();
+
+let bon = `
+ALI BABA KIOSK
+Bismarckstr. 23
+25421 Pinneberg
+
+${jetzt.toLocaleString("de-DE")}
+
+--------------------------------
+
+`;
+
+if(capri > 0)
+bon += `Capri Sonne x ${capri}      ${(capri*0.50).toFixed(2)} €\n`;
+
+if(still > 0)
+bon += `Wasser 0,25 l x ${still}   ${(still*0.25).toFixed(2)} €\n`;
+
+if(gross > 0)
+bon += `Wasser 1,5 l x ${gross}    ${(gross*0.35).toFixed(2)} €\n`;
+
+if(monster > 0)
+bon += `Monster x ${monster}       ${(monster*1.10).toFixed(2)} €\n`;
+if(mars > 0)
+bon += `Mars x ${mars}          ${(mars*0.50).toFixed(2)} €\n`;
+
+if(snickers > 0)
+bon += `Snickers x ${snickers}  ${(snickers*0.50).toFixed(2)} €\n`;
+
+if(twix > 0)
+bon += `Twix x ${twix}          ${(twix*0.50).toFixed(2)} €\n`;
+
+if(bueno > 0)
+bon += `Kinder Bueno x ${bueno} ${(bueno*0.40).toFixed(2)} €\n`;
+
+if(kaugummi > 0)
+bon += `Kaugummi x ${kaugummi}  ${(kaugummi*1.30).toFixed(2)} €\n`;
+
+if(chips > 0)
+bon += `Chips x ${chips}        ${(chips*1.20).toFixed(2)} €\n`;
+bon += `
+
+--------------------------------
+
+SUMME:     ${summe.toFixed(2)} €
+GEGEBEN:   ${gegeben.toFixed(2)} €
+RÜCKGELD:  ${rueckgeld.toFixed(2)} €
+
+--------------------------------
+
+Vielen Dank
+für Ihren Einkauf!
+
+ALI BABA KIOSK
+`;
+
+let druckfenster = window.open("","BON","width=450,height=700");
+
+druckfenster.document.write(`
+<html>
+<head>
+<title>Kassenbon</title>
+
+<style>
+
+body{
+font-family:Consolas, monospace;
+padding:20px;
+font-size:18px;
+white-space:pre-wrap;
+}
+
+</style>
+</head>
+
+<body>${bon}
+
+<script>
+window.onload=function(){
+window.print();
+}
+<\/script>
+
+</body>
+</html>
+`);
+
+druckfenster.document.close();
+
+}
+
+berechnen();
+
+</script>
+
+</body>
+</html>
